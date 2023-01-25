@@ -5,24 +5,11 @@ import Carousel from "../../components/Carousel"
 import Footer from "../../components/Footer"
 import Header from "../../components/Header"
 import getVODImage from "../../utils/vod/getVODImage"
-import { useLocation } from "react-router"
-import usePrevLocation from "../../hooks/usePrevLocation"
 
 const Home = () => {
-    // const location = useLocation()
     const [categoryMovies, setCategoryMovies] = useState([])
     const [bannerDetails, setBannerDetails] = useState({})
-
-    // const [route, setRoute] = useState({
-    //     to: location.pathname,
-    //     from: location.pathname
-    // });
-
-    // useEffect(() => {
-    //     setRoute((prev) => ({ to: location.pathname, from: prev.to }))
-    // }, [location])
-
-    // console.log(route) 
+    // const [channels, setChannels] = useState([])
 
     useEffect(() => {
         const init = async () => {

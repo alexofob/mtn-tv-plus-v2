@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react"
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { COOKIES } from "../../constants/global.const"
 import routes from "../../constants/routes.const"
 import { checkDeviceIP } from "../../redux/functions/auth"
 import Loader from "../Loader"
 
 const ProtectedRoute = ({ children }) => {
+    const navigate=useNavigate()
     const userInfoCookie = COOKIES.get("user_info")
     const [loading, setLoading] = useState(true)
     const [isIPValid, setIsIPValid] = useState(false)
 
     useEffect(() => {
         const initCheckIP = async () => {
-            let x = await checkDeviceIP()
+            let x = await checkDeviceIP(navigate)
             setIsIPValid(x)
             if (x) setLoading(false)
         }
         initCheckIP()
-    }, [])
+    }, [navigate])
 
     if (loading) return <Loader />
     if (!userInfoCookie) return <Navigate replace to={routes.login} />

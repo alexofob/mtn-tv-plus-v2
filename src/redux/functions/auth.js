@@ -10,9 +10,9 @@ import { sendLog } from "../../utils/sendLog.util"
 
 const parser = new UAParser()
 const userInfoCookie = COOKIES.get("user_info")
-const { access_token, operator_uid } = userInfoCookie || {}
+const { access_token } = userInfoCookie || {}
 
-export const checkDeviceIP = async () => {
+export const checkDeviceIP = async (navigate) => {
     try {
         const res = await axios.get(`https://tvanywhereonline.com/cm/api/auth/?operator_uid=${OPERATOR_UID}`, {
             headers: {
@@ -21,7 +21,7 @@ export const checkDeviceIP = async () => {
             }
         })
 
-        if (!res.data.valid) window.location.replace(routes.outOfRegion)
+        if (!res.data.valid) navigate(routes.outOfRegion)
 
         return res.data.valid
 
@@ -142,12 +142,12 @@ export const signUp = async (dispatch, navigate) => {
         if (signUpRes.data.message === "subscriber already exist") {
             dispatch(setAuthLoading(false))
             await login(dispatch)
+
+            window.location.replace("/#/home")
+
+            // window.history.go()
             // navigate(routes.home)
-
-            // console.log(operator_uid)
-
-            window.history.go(+1)
-            return
+            // return
         }
 
         if (
@@ -162,10 +162,12 @@ export const signUp = async (dispatch, navigate) => {
         if (signUpRes.data.status === "ok") {
             dispatch(setAuthLoading(false))
             await login(dispatch)
-            // window.location.replace("/#/home")
 
-            // console.log(operator_uid)
-            window.history.go(+1)
+            window.location.replace("/#/home")
+            // navigate(routes.home)
+
+            // window.history.go()
+            // return
         }
 
     } catch (e) {

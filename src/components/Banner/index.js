@@ -3,22 +3,6 @@ import Button from "../buttons/Button"
 const Banner = ({ content }) => {
     const { title, description, bgImage, watchLink } = content
 
-    // const clickButton = (e) => {
-    //     e.click()
-    // }
-
-    if (!title && !description && !bgImage) { 
-        return (
-            <main className="w-full h-full flex items-center justify-center z-[1000] relative mt-[100px]">
-                <button
-                    className="bg-brand p-3 px-5 text-black rounded-md"
-                    // ref={clickButton}
-                    onClick={() => window.history.go()}
-                >Refresh</button>
-            </main>
-        )
-    }
-
     return (
         <div className="-mt-[60px] w-screen lg:h-screen h-[65vh] relative">
             <div className="px-5 h-full flex items-center">

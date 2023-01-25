@@ -1,6 +1,7 @@
 import axios from "axios"
+import axiosRetry from "axios-retry"
 import { toast } from "wc-toast"
-import { AUTH_BASE_URL } from "../../config/apis.config"
+import { VOD_BASE_URL } from "../../config/apis.config"
 import { COOKIES } from "../../constants/global.const"
 import { getKeyByValue } from "../../utils/global.utils"
 import { sendLog } from "../../utils/sendLog.util"
@@ -20,7 +21,7 @@ export const getPackages = async () => {
         await refreshToken()
 
         const packages = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/packages?device_class=desktop`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/packages?device_class=desktop`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -53,7 +54,7 @@ export const getCategories = async () => {
         let categoriesIdsString = ""
 
         const categories = await axios.get(
-            AUTH_BASE_URL + `/api/client/v2/${operator_uid}/categories/vod?packages=${packageIdsString}`,
+            VOD_BASE_URL + `/api/client/v2/${operator_uid}/categories/vod?packages=${packageIdsString}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -91,7 +92,7 @@ export const getCategoryMovies = async () => {
         })
 
         let categoryMovies = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/categories/vod/content?packages=${packageIds}&categories=${categoriesIdsString}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/categories/vod/content?packages=${packageIds}&categories=${categoriesIdsString}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -133,7 +134,7 @@ export const getGenreMovies = async (activeMovieGenre, dispatch) => {
         })
 
         let categoryMovies = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/categories/vod/content?packages=${packageIds}&categories=${categoriesIdsString}&genres=${genreId}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/categories/vod/content?packages=${packageIds}&categories=${categoriesIdsString}&genres=${genreId}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -169,7 +170,7 @@ export const getSeriesDetails = async (id, dispatch) => {
         dispatch(setVODDetailsLoading(true))
 
         const seriesDetailsRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/series/${id}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/series/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -201,7 +202,7 @@ export const getSearchResults = async (query, dispatch) => {
         const sanitizedQuery = query.replace(/[^a-zA-Z ]/g, "")
 
         const searchResultsResponse = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/search/movies/${sanitizedQuery}?translation=hr&packages=${packageIdsString}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/search/movies/${sanitizedQuery}?translation=hr&packages=${packageIdsString}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -236,7 +237,7 @@ export const getMovieDetails = async (id, type, dispatch) => {
         await refreshToken(dispatch)
 
         const movieDetailsRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v2/${operator_uid}/movies?movies=${id.toString()}`,
+            VOD_BASE_URL + `/api/client/v2/${operator_uid}/movies?movies=${id.toString()}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -257,7 +258,7 @@ export const getMovieDetails = async (id, type, dispatch) => {
 export const getGenres = async () => {
     try {
         const genreRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/genres`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/genres`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -280,9 +281,9 @@ export const getVideo = async (id, type, dispatch, uid, title) => {
 
         let url
 
-        if (type === "movie") url = AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/movies/${id}`
-        if (type === "series") url = AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/episodes/${id}`
-        if (type === "live") url = AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/live/channels/${id}`
+        if (type === "movie") url = VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/movies/${id}`
+        if (type === "series") url = VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/episodes/${id}`
+        if (type === "live") url = VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/live/channels/${id}`
 
         const videoRes = await axios.get(url,
             {
@@ -316,7 +317,7 @@ export const getTrailer = async (id, type) => {
     try {
 
         const trailerRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/trailers/movies/${id}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/vod/trailers/movies/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -333,14 +334,18 @@ export const getTrailer = async (id, type) => {
 
 export const getBannerContent = async () => {
     try {
+        // console.log(operator_uid)
         const bannerContentRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/banners?translation=en&accessKey=WkVjNWNscFhORDBLCg==`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/banners?translation=en&accessKey=WkVjNWNscFhORDBLCg==`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
                 }
             }
         )
+
+        axiosRetry(axios, { retries: 3 });
+        // axiosRetry(axios, { retryDelay: axiosRetry.exponentialDelay });
 
         return bannerContentRes.data.data[0]
 
@@ -354,7 +359,7 @@ export const getSimilarMovies = async (id, type, dispatch) => {
     try {
 
         let similarMoviesRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/vod/${type}/${id}/related`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/vod/${type}/${id}/related`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
@@ -373,7 +378,7 @@ export const getWatchlist = async () => {
     try {
 
         const watchlistRes = await axios.get(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/my_content`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/my_content`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`,
@@ -398,8 +403,8 @@ export const updateWatchlist = async (id, type, lengthWatchedInMs = 0, hideSnack
 
         let url
 
-        if (type === 'series') url = AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/episodes/${id}`
-        if (type === 'movie') url = AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/movies/${id}/${id}`
+        if (type === 'series') url = VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/episodes/${id}`
+        if (type === 'movie') url = VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/movies/${id}/${id}`
 
         const updateWatchlistRes = await axios.put(
             url, {
@@ -432,7 +437,7 @@ export const removeFromWatchlist = async (id, type) => {
         if (!id) return
 
         const removeFromWatchlistRes = await axios.delete(
-            AUTH_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/movies/${id}`,
+            VOD_BASE_URL + `/api/client/v1/${operator_uid}/users/${user_id}/bookmarks/movies/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${access_token}`
