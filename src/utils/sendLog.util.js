@@ -14,6 +14,7 @@ const LOG_MESSAGES = {
     visitLandingNG: 'User visited Nigeria instance',
     search: "User searched for content",
     quit: "User closed web client",
+    subscribe: "User subscribed to a plan"
 }
 
 export const sendLog = async (data) => {
@@ -37,6 +38,7 @@ export const sendLog = async (data) => {
         if (action === 'search') logMessage = LOG_MESSAGES.search
         if (action === 'login') logMessage = LOG_MESSAGES.login
         if (action === 'quit') logMessage = LOG_MESSAGES.quit
+        if (action === 'subscribe') logMessage = LOG_MESSAGES.subscribe
 
         if (action === 'play' && content_type === 'movie') logMessage = LOG_MESSAGES.playMovie
         if (action === 'play' && content_type === 'series') logMessage = LOG_MESSAGES.playSeries
