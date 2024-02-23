@@ -21,6 +21,10 @@ export const AUTHORIZED_NAV_LINKS = [
         link: routes.livetv
     },
     {
+        name: "Subscribe",
+        link: routes.subscribe
+    },
+    {
         name: "My profile",
         link: routes.account
     },

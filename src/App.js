@@ -13,6 +13,7 @@ import Account from "./pages/authorized/account";
 import Movies from "./pages/authorized/movies";
 import Home from "./pages/authorized/home";
 import LiveTV from "./pages/authorized/livetv";
+import Subscribe from "./pages/authorized/subscribe";
 import ProtectedRoute from "./components/ProtectedRoute";
 import OutOfRegion from "./pages/outOfRegion";
 import routes from "./constants/routes.const";
@@ -24,6 +25,7 @@ function App() {
         <Route path={routes.home} element={<ProtectedRoute><Home /></ProtectedRoute>} />
         <Route path={routes.movies} element={<ProtectedRoute><Movies /></ProtectedRoute>} />
         <Route path={routes.livetv} element={<ProtectedRoute><LiveTV /></ProtectedRoute>} />
+        <Route path={routes.subscribe} element={<ProtectedRoute><Subscribe /></ProtectedRoute>} />
         <Route path={routes.account} element={<ProtectedRoute><Account /></ProtectedRoute>} />
         <Route path={routes.outOfRegion} element={<OutOfRegion />} />
         <Route path="/search" element={<ProtectedRoute><Search /></ProtectedRoute>} />

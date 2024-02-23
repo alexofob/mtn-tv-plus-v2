@@ -7,7 +7,8 @@ const routes = {
     livetv: "/live-tv",
     search: "/search",
     account: "/account",
-    home: "/home"
+    home: "/home",
+    subscribe: "/subscribe",
 }
 
 export default routes
