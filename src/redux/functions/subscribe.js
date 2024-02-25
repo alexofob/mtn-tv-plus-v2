@@ -24,7 +24,7 @@ export const subscribe = async (productId, dispatch, navigate) => {
                 },
                 subscriber_uid: localStorage.getItem("_tva_username"),
                 subscription_type:"one-off",
-                bill: false,
+                bill: true,
                 product_id: productId,
                 medium: "web",
                 operator: ""

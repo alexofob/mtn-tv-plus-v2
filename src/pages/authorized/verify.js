@@ -33,6 +33,8 @@ const Verify = () => {
                                 value={otp}
                                 onChange={handleInput}
                                 numInputs={6}
+                                renderSeparator={<span>-</span>}
+                                renderInput={(props) => <input {...props} />}
                                 inputStyle="outline-none border border-[#ddd] w-full min-w-[33px] lg:min-w-[40px] mr-1"
                             />
                         </div>
